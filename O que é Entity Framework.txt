@@ -1,0 +1,68 @@
+
+
+		Entity Framework
+			O entity framework é um ORM(Mepador relacional de objetos) que permite que os desenvolvedores
+			 de .NET trabalhem com um banco de dados usando objetos .NET. Elimina a necessidade da maioria do codigo
+			 de acesso a dados que os desenvolvedores geralmente precisam gravar.
+			 
+			
+			Linhas de Utilização 
+				O entity framework possui três liunhas principais de utilização:
+						Database First
+							Em Diversos casos nos deparamos com situções em que o banco de dados foi criado antes
+							de iniciar a aplicação. Isso é muito comum em equipes mais acustumadas com o modelo
+							relacional do que com o modelo orientado a objetos. Diante desse cenario é normal
+							optar pela utilização Database First que tem como objeto ler o banco de dados e
+							aplicar uma engenharia reversa carregando as classes que representarão as tabelas do banco
+						Model First
+							O model First nos permite gerar primeiro um modelo e a partir dele gerar nossa base de dados.
+							Essa montagem de modelo é feita através do EDM Designer utilizando os componentes que ele nos disponibiliza
+							sendo os mais comuns "Entity"(Representa as nossa classes nas tabelas do banco) e "Association"(Representa os relacionamentos ex: associações 1 para 1).
+						Code First
+							Na abordagem Oode First você cria primeiro  as suas classes de entidade e deixa para o Entity Framework a 
+							responsabilidade de criar o banco de dados. Essas classes são conhecidas como classes POCO(Plan Old CLR Objects)
+							que são classes que utilizam apenas os tipos do .NET framework sendo independete de qualquer outra framework inclusive
+							do "Entity", essas classes podem ser utilizadas por outros projetos que utilizam ou não o Entity Framework
+			
+			
+			Data Annotations
+				O data annotations é um recurso que permite que você adicione atributos e métodos em nossas classes para alterar
+				convenções padrão e personalizar alguns comportamentos.
+				
+				Principais Atributos
+					
+						Required: Significa campo obrigatorio
+						
+						RegularExpression: validar o campo por expressão regular.
+						
+						Display: Nome a ser mostrado em todos as interfaces de usuário.
+						
+						StringLength: Determina a quantidade máxima de caracteres que poderá ser informada.
+						
+						MinLength: Determina a quantidade mínima de caracteres que poderá ser informada.
+						
+						DisplayFormat: Formato a ser exibido nas interfaces de usuario
+						
+						Range: Define a faixa de dados aceito pela propriedade
+						
+						
+			
+			Migrations
+				O migrations é um recurso que oferece uma maneira de atualizar de forma incremental o esquema de banco de dados 
+				para manter em sincronia com modelo de classe do seu projeto preservando os dados existentes no banco de dados.
+				Com o Migrations também é possível realizar o downgrade caso você deseja voltar o seu banco de dados para a
+				versão anterior em que se encontrava, além de mantart um historico de alterações.
+				
+				Antes do Entity Framework contar com suporte ao migrations existia apenas três estrategias para criação de banco de dados,
+				quais sejam:
+					CreateDatabaseIfNotExists
+						Nessa estratégia o Entity Framework somente cria banco de dados se ele não existir, ou seja, se você estiver
+						utilizando essa estratégia e realizar uma alteração no seu modelo de classes você teria que remover o seu banco
+						de dados e cria-lo novamente perdendo, assim, todos os seus dados.
+						
+					DropCreateDatabaseAlways
+						Nesse modelo o Entity Framework apaga o banco de dados e o recria sempre que o projeto é executado fazendo com que você
+						perca todos os seus dados ao inicia-lo.
+					DropCreateDatabaseIfModelChanges
+						Nessa estratégia o Entity framework apaga o seu banco de dado se o recria sempre que identificar uma alteração no seu modelo
+						de classes, isso também faz com que você perca todos os seus dados, porém apenas quando você realizar a alteração do seu modelo.
