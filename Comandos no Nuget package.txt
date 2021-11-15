@@ -1,0 +1,18 @@
+
+
+
+Para realizar a instalção de um pacote utilizado o NuGet:
+		
+		Para Utilizar o console:
+				Tools --> NuGet package Manager
+			Comando:
+					Install-Package nomeDoPacote
+			
+			
+	
+	Para esse Desenvolvimento e necessario instalar o pacote do Entity Framework e suas ferramentas de utilização
+		
+		
+			
+			Install-Package Microsoft.EntityFrameworkCore.SqlServer
+			Install-Package Microsoft.EntityFrameworkCore.Tools

@@ -25,6 +25,7 @@ namespace CursoMvc.Controllers
 
         public IActionResult Privacy()
         {
+
             return View();
         }
 

@@ -1,0 +1,51 @@
+
+		
+		
+		Usaremos o metodo Code First para esse Desenvolvimento
+		
+		A classe Context herda da classe DbContext
+			
+			Dentro Da classe Devemos sobrescrever o metodo OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
+				
+				Esse método tem a funcionalidade de configurar o Entity Framework
+					Exemplo:
+							Qual o banco irá ser utilizado
+								protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+								{
+									optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Cursomvc;Integrated Security=true");
+								}
+							
+							
+			
+			Devemos criar propriedades dentro Dessa classe onde será a referencia para o Entity Framework para realizar
+			a criação das tabelas
+				EXEMPLO:
+				
+						public DbSet<A classe> nome da propriedade {get; set;}
+						
+						
+		
+		
+			Apos todas as configurações necessarias e preciso que o startup visualize o que e preciso fazer com essas configuracoes
+			então e necessario adicionar no método ConfigureServices
+			
+			Exemplo:
+					
+					public void ConfigureServices(IServiceCollection services)
+					{
+						services.AddControllersWithViews();
+						
+						services.AddDbContext<Context>();
+					}
+					
+					
+			
+			Criando uma Migration
+			
+				Ao instalar o pacote Tools o Entity framework entenderá alguns comandos de criação de migrations
+				
+						
+						Add-Migration nomeDaMigration --> ao executar esse comando no console do Nuget, será criado os scripts das tabelas
+															de acordo com as configuracoes no Context
+						
+						Update-Database ---> Apartir das migrations criadas sera criado o database 
