@@ -6,16 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CursoMvc.Models;
+using CursoMvc.Service;
 
 namespace CursoMvc.Controllers
 {
     public class CategoriasController : Controller
     {
         private readonly Context _context;
-
+        private readonly CategoriaService categoriaService;
         public CategoriasController(Context context)
         {
             _context = context;
+            categoriaService = new CategoriaService();
         }
 
         // GET: Categorias
@@ -32,8 +34,8 @@ namespace CursoMvc.Controllers
                 return NotFound();
             }
 
-            var categoria = await _context.Categorias
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Categoria categoria = await _context.Categorias.FirstOrDefaultAsync(m => m.Id == id);
+
             if (categoria == null)
             {
                 return NotFound();
@@ -53,12 +55,12 @@ namespace CursoMvc.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Descricao")] Categoria categoria)
+        public  IActionResult Create([Bind("Id,Descricao")] Categoria categoria)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(categoria);
-                await _context.SaveChangesAsync();
+                categoriaService.CreateCategoria(categoria);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(categoria);
@@ -72,11 +74,11 @@ namespace CursoMvc.Controllers
                 return NotFound();
             }
 
-            var categoria = await _context.Categorias.FindAsync(id);
+            Categoria categoria = await _context.Categorias.FindAsync(id);
+
             if (categoria == null)
-            {
                 return NotFound();
-            }
+
             return View(categoria);
         }
 
@@ -85,33 +87,28 @@ namespace CursoMvc.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao")] Categoria categoria)
+        public IActionResult Edit(int id, [Bind("Id,Descricao")] Categoria categoria)
         {
             if (id != categoria.Id)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(categoria);
-                    await _context.SaveChangesAsync();
+                    categoriaService.UpdateCategoria(categoria);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!CategoriaExists(categoria.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                        
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(categoria);
         }
 
@@ -119,16 +116,12 @@ namespace CursoMvc.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var categoria = await _context.Categorias
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Categoria categoria = await _context.Categorias.FirstOrDefaultAsync(m => m.Id == id);
+
             if (categoria == null)
-            {
                 return NotFound();
-            }
 
             return View(categoria);
         }
@@ -138,9 +131,10 @@ namespace CursoMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
-            _context.Categorias.Remove(categoria);
-            await _context.SaveChangesAsync();
+            Categoria categoria = await _context.Categorias.FindAsync(id);
+
+            categoriaService.DeleteCategoria(categoria);
+            
             return RedirectToAction(nameof(Index));
         }
 

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CursoMvc.Models;
+using CursoMvc.Service;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace CursoMvc.Controllers
 {
@@ -13,33 +15,34 @@ namespace CursoMvc.Controllers
     {
         private readonly Context _context;
 
+        private readonly ProdutoService produtoService;
+
         public ProdutosController(Context context)
         {
             _context = context;
+            produtoService = new ProdutoService();
         }
 
         // GET: Produtos
         public async Task<IActionResult> Index()
         {
-            var context = _context.Produtos.Include(p => p.Categoria);
-            return View(await context.ToListAsync());
+            IIncludableQueryable<Produto,Categoria> produtosQuery = _context.Produtos.Include(p => p.Categoria);
+
+            List<Produto> produtos = await produtosQuery.ToListAsync();
+
+            return View(produtos);
         }
 
         // GET: Produtos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var produto = await _context.Produtos
-                .Include(p => p.Categoria)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Produto produto = await _context.Produtos.Include(p => p.Categoria).FirstOrDefaultAsync(m => m.Id == id);
+
             if (produto == null)
-            {
                 return NotFound();
-            }
 
             return View(produto);
         }
@@ -47,9 +50,10 @@ namespace CursoMvc.Controllers
         // GET: Produtos/Create
         public IActionResult Create()
         {
-            var categoriaId = new SelectList(_context.Categorias, "Id", "Descricao");
+            SelectList categoriaId = new SelectList(_context.Categorias, "Id", "Descricao");
 
             ViewData["CategoriaId"] = categoriaId;
+
             return View();
         }
 
@@ -58,15 +62,17 @@ namespace CursoMvc.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Descricao,Quantidade,CategoriaId")] Produto produto)
+        public IActionResult Create([Bind("Id,Descricao,Quantidade,CategoriaId")] Produto produto)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(produto);
-                await _context.SaveChangesAsync();
+                produtoService.CreateProduto(produto);
+                
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao", produto.CategoriaId);
+
             return View(produto);
         }
 
@@ -92,34 +98,30 @@ namespace CursoMvc.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao,Quantidade,CategoriaId")] Produto produto)
+        public IActionResult Edit(int id, [Bind("Id,Descricao,Quantidade,CategoriaId")] Produto produto)
         {
             if (id != produto.Id)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(produto);
-                    await _context.SaveChangesAsync();
+                    produtoService.UpdateProduto(produto);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ProdutoExists(produto.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                     
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao", produto.CategoriaId);
+           
             return View(produto);
         }
 
@@ -127,17 +129,12 @@ namespace CursoMvc.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var produto = await _context.Produtos
-                .Include(p => p.Categoria)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Produto produto = await _context.Produtos.Include(p => p.Categoria).FirstOrDefaultAsync(m => m.Id == id);
+
             if (produto == null)
-            {
                 return NotFound();
-            }
 
             return View(produto);
         }
@@ -147,9 +144,10 @@ namespace CursoMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var produto = await _context.Produtos.FindAsync(id);
-            _context.Produtos.Remove(produto);
-            await _context.SaveChangesAsync();
+            Produto produto = await _context.Produtos.FindAsync(id);
+
+            produtoService.DeleteUpdate(produto);
+
             return RedirectToAction(nameof(Index));
         }
 
