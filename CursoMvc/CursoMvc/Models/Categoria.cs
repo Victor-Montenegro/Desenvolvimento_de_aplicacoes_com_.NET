@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 
 namespace CursoMvc.Models
 {
-    public class Categoria : Produto
+    public class Categoria 
     {
         public int Id { get; set; }
 
         public string Descricao { get; set; }
+
+        public List<Produto> Produtos { get; set; }
     }
 }
