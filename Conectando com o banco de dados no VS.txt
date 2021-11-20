@@ -1,0 +1,11 @@
+
+
+
+		PARA SE CONECTAR COM O BANCO NO VISUAL STUDIO
+			
+				VA em SERVER EXPLORER
+					connect to database
+						Selecione o banco de dados(nesse projeto foi utilizado o sql Server)
+							Em server name coloque o nome do banco de dados criado no projeto --> (localdb)\mssqllocaldb
+								Em Connect to a database --> select or enter a database name
+										selecione o banco pre-carregado --> Cursomvc
