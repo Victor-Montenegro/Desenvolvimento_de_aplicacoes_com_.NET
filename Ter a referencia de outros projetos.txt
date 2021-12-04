@@ -1,0 +1,10 @@
+
+
+
+		Caso voce queria ter referencias de outros projetos e necessario
+		
+				Aperte com o botao direto:
+						Add
+							reference
+									escolha o projeto que queria
+						

@@ -1,0 +1,27 @@
+
+
+
+
+	Primeira Passo:
+		Realizar a instalção no geranciador de pacotes NuGet no projeto
+			PACOTE: Swashbuckle.AspNetCore 
+			
+		Realziar a configuração do swagger no projeto
+				Botao direito na solução
+					Propriedade
+						Aba Compilar:
+							Ativa a opção: Arquivo de documentação XML
+					
+						Aba Depurar: 
+							Iniciar navegador: colocar "swagger"
+							
+				Configurar no arquivo Startuo.cs
+					Realizar a injerção de dependencia do swagger
+							Services/injerção
+								 services.AddSwaggerGen(x => { x.SwaggerDoc("v1", new OpenApiInfo { Title = "CursoAPI", Version = "v1" }); });
+								 
+							Configurando Middleware
+								app.UseSwagger();
+								app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json","CursoAPI"); });
+								 
+								 
