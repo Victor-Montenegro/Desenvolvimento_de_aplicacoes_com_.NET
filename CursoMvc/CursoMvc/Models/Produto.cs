@@ -8,6 +8,7 @@ namespace CursoMvc.Models
 {
     public class Produto
     {
+        [Key]
         public int Id { get; set; }
 
         [Display(Name = "Descrição")]
